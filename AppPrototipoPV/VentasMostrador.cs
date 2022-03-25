@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,25 @@ namespace AppPrototipoPV
 {
     public partial class VentasMostrador : Form
     {
-        public VentasMostrador()
+        Cliente datos_cliente;
+        Caja datos_caja_almacen;
+        Cajero datos_cajero;
+
+        public VentasMostrador(Cliente obj1, Caja obj2, Cajero obj3)
         {
+            this.datos_cliente = obj1;
+            this.datos_caja_almacen = obj2;
+            this.datos_cajero = obj3;
             InitializeComponent();
+        }
+
+        private void VentasMostrador_Load(object sender, EventArgs e)
+        {
+            Debug.WriteLine("D: "+datos_cliente.Clave_cliente);
+            label_clave_cliente.Text = datos_cliente.Clave_cliente;
+            label_nombre_cliente.Text = datos_cliente.Nombre_cliente;
+            label_almacen.Text = datos_caja_almacen.Nombre_almacen;
+            label_cajero.Text = datos_cajero.Nombrecajero;
         }
     }
 }

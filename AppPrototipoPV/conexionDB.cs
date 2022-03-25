@@ -141,6 +141,107 @@ namespace conexionDB
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public string[] Obtener_cliente() {
+			int id_cliente = 0;
+			StringBuilder nombre_cliente = new StringBuilder();
+			StringBuilder clave_cliente = new StringBuilder();
+			string[] datos_cliente = new string[3];
+
+			int transaccion = ApiBas.NewTrn(db, 3); //transaccion
+			int sql = ApiBas.NewSql(transaccion); //dataset que hara el select
+			ApiBas.TrnStart(transaccion); //inicio de la transaccion
+
+			String cadenaConsulta = $@"SELECT cc.clave_cliente, c.cliente_id, c.nombre
+									 FROM claves_clientes cc
+									 JOIN clientes c ON cc.cliente_id = c.cliente_id
+									WHERE c.nombre = 'Venta a Publico en Gral.' ROWS 1 TO 1"; //consulta
+			ApiBas.SqlQry(sql, cadenaConsulta); //
+
+			int estado_exe = ApiBas.SqlExecQuery(sql);
+
+			if (estado_exe == 0)
+			{
+				if (ApiBas.SqlRecordCount(sql) != 0)
+				{
+					Debug.WriteLine("S. "+ ApiBas.SqlRecordCount(sql));
+					int z = ApiBas.SqlGetFieldAsInteger(sql, "cliente_id", ref id_cliente);
+					int x = ApiBas.SqlGetFieldAsString(sql, "nombre", nombre_cliente);
+					int c = ApiBas.SqlGetFieldAsString(sql, "clave_cliente", clave_cliente);
+
+					Debug.WriteLine("zz "+z + x+ c);
+
+
+					datos_cliente[0] = id_cliente.ToString();
+					datos_cliente[1] = nombre_cliente.ToString();
+					datos_cliente[2] = clave_cliente.ToString();
+
+					ApiBas.SqlClose(sql);
+					return datos_cliente;
+				}
+				else
+				{
+					datos_cliente[0] = "";
+					datos_cliente[1] = "";
+					datos_cliente[2] = "";
+					ApiBas.SqlClose(sql);
+				}
+			}
+			return datos_cliente;
+		}
+
+		public string[] Obtener_almacen_caja(int caja_id)
+		{
+			int id_caja = 0;
+			StringBuilder nombre_caja = new StringBuilder();
+			int almacen_id = 0;
+			StringBuilder nombre_almacen = new StringBuilder();
+			string[] datos_cliente = new string[4];
+
+			int transaccion = ApiBas.NewTrn(db, 3); //transaccion
+			int sql = ApiBas.NewSql(transaccion); //dataset que hara el select
+			ApiBas.TrnStart(transaccion); //inicio de la transaccion
+
+			String cadenaConsulta = $@"SELECT c.caja_id, c.nombre, a.almacen_id, a.nombre
+										FROM CAJAS c
+									JOIN ALMACENES a ON c.almacen_id = a.almacen_id
+									WHERE c.caja_id = {caja_id}"; //consulta
+
+			ApiBas.SqlQry(sql, cadenaConsulta); //
+
+			int estado_exe = ApiBas.SqlExecQuery(sql);
+			if (estado_exe == 0)
+			{
+				if (ApiBas.SqlRecordCount(sql) != 0)
+				{
+
+					ApiBas.SqlGetFieldAsInteger(sql, "caja_id", ref id_caja);
+					ApiBas.SqlGetFieldAsString(sql, "nombre", nombre_caja);
+					ApiBas.SqlGetFieldAsInteger(sql, "almacen_id", ref almacen_id);
+					ApiBas.SqlGetFieldAsString(sql, "nombre", nombre_almacen);
+
+					datos_cliente[0] = id_caja.ToString();
+					datos_cliente[1] = nombre_caja.ToString();
+					datos_cliente[2] = almacen_id.ToString();
+					datos_cliente[3] = nombre_almacen.ToString();
+
+					ApiBas.SqlClose(sql);
+					return datos_cliente;
+				}
+				else
+				{
+					datos_cliente[0] = "";
+					datos_cliente[1] = "";
+					datos_cliente[2] = "";
+					datos_cliente[3] = "";
+					ApiBas.SqlClose(sql);
+				}
+			}
+			return datos_cliente;
+		}
+
 		public List<Tuple<int, string>> obtener_cajas_por_operar(int id_cajero, char operacion)
 		{
 			int caja_id = 0;

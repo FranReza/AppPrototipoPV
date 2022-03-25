@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AppPrototipoPV
 {
-    class Caja
+    public class Caja
     {
 
         private int caja_id;

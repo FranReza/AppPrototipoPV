@@ -39,11 +39,11 @@ namespace AppPrototipoPV
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label_nombre_cliente = new System.Windows.Forms.Label();
             this.label_clave_cliente = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.label_cajero = new System.Windows.Forms.Label();
+            this.label_almacen = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -125,12 +125,22 @@ namespace AppPrototipoPV
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label_nombre_cliente);
             this.panel1.Controls.Add(this.label_clave_cliente);
             this.panel1.Location = new System.Drawing.Point(14, 12);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(334, 100);
             this.panel1.TabIndex = 4;
+            // 
+            // label_nombre_cliente
+            // 
+            this.label_nombre_cliente.AutoSize = true;
+            this.label_nombre_cliente.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label_nombre_cliente.Location = new System.Drawing.Point(12, 53);
+            this.label_nombre_cliente.Name = "label_nombre_cliente";
+            this.label_nombre_cliente.Size = new System.Drawing.Size(236, 25);
+            this.label_nombre_cliente.TabIndex = 1;
+            this.label_nombre_cliente.Text = "Venta al Publico en Gneral";
             // 
             // label_clave_cliente
             // 
@@ -142,45 +152,35 @@ namespace AppPrototipoPV
             this.label_clave_cliente.TabIndex = 0;
             this.label_clave_cliente.Text = "C025";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(12, 53);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(236, 25);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Venta al Publico en Gneral";
-            // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.label4);
-            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.label_cajero);
+            this.panel2.Controls.Add(this.label_almacen);
             this.panel2.Location = new System.Drawing.Point(396, 12);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(307, 100);
             this.panel2.TabIndex = 5;
             // 
-            // label3
+            // label_cajero
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(14, 10);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(146, 25);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Almacen Gneral";
+            this.label_cajero.AutoSize = true;
+            this.label_cajero.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label_cajero.Location = new System.Drawing.Point(14, 63);
+            this.label_cajero.Name = "label_cajero";
+            this.label_cajero.Size = new System.Drawing.Size(172, 25);
+            this.label_cajero.TabIndex = 1;
+            this.label_cajero.Text = "Nombre del Cajero";
             // 
-            // label4
+            // label_almacen
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(14, 63);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(172, 25);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "Nombre del Cajero";
+            this.label_almacen.AutoSize = true;
+            this.label_almacen.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label_almacen.Location = new System.Drawing.Point(14, 10);
+            this.label_almacen.Name = "label_almacen";
+            this.label_almacen.Size = new System.Drawing.Size(146, 25);
+            this.label_almacen.TabIndex = 0;
+            this.label_almacen.Text = "Almacen Gneral";
             // 
             // textBox2
             // 
@@ -231,6 +231,7 @@ namespace AppPrototipoPV
             this.Controls.Add(this.dataGridView1);
             this.Name = "VentasMostrador";
             this.Text = "VentasMostrador";
+            this.Load += new System.EventHandler(this.VentasMostrador_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -253,11 +254,11 @@ namespace AppPrototipoPV
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label_nombre_cliente;
         private System.Windows.Forms.Label label_clave_cliente;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label_cajero;
+        private System.Windows.Forms.Label label_almacen;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox3;
