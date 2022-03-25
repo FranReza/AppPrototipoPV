@@ -38,7 +38,8 @@ namespace AppPrototipoPV
         {
             if ((int)e.KeyChar == (int)Keys.Enter)
             {
-                
+                string campo_clave_valor = textBox_clave_articulo.Text;
+                conexionDB.conexionDB.Instance.Buscar_Articulo_por_clave_con_precio_impuesto(campo_clave_valor, datos_cliente.Cliente_id.ToString());
             }
         }
     }

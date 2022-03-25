@@ -583,8 +583,58 @@ namespace conexionDB
 			return 0;
 		}
 
-		public void Buscar_Articulo() {
-		
+		public void Buscar_Articulo_por_clave_con_precio_impuesto(string clave_articulo, string clave_cliente_id) {
+			//algunas variables
+			int articulo_id = 0;
+			StringBuilder cl_articulo = new StringBuilder();
+			StringBuilder nombre_ArticuLo = new StringBuilder();
+			double precio_uni = 0;
+			double precio_imp = 0;
+
+			//primero las transacciones.
+			int transaccion_busca_articulo = ApiBas.NewTrn(db, 3);
+			int transaccion_get_precio = ApiBas.NewTrn(db, 3);
+			int transaccion_get_precio_impuesto = ApiBas.NewTrn(db, 3);
+
+			//segundo las variables de sql y store procedure
+			int sql_busca_articulo = ApiBas.NewSql(transaccion_busca_articulo); 
+			int sp_get_precio = ApiBas.NewSp(transaccion_get_precio);
+			int sp_get_precio_impuesto = ApiBas.NewSp(transaccion_get_precio_impuesto);
+
+			//PRIMERO BUSCAMOS EL ARTICULO
+			string query_busca_articulo = $@"SELECT ARTICULO_ID, CLAVE_ARTICULO, NOMBRE_ARTICULO FROM BUSCA_ARTICULOS('CLAVE', 'N', 'S', '{clave_articulo}', NULL) ROWS 1 TO 1;";
+			ApiBas.SqlQry(sql_busca_articulo, query_busca_articulo);
+			ApiBas.SqlExecQuery(sql_busca_articulo);
+
+			if (ApiBas.SqlRecordCount(sql_busca_articulo) > 0) {
+
+				ApiBas.SqlGetFieldAsInteger(sql_busca_articulo, "ARTICULO_ID", ref articulo_id);
+				ApiBas.SqlGetFieldAsString(sql_busca_articulo, "CLAVE_ARTICULO", cl_articulo);
+				ApiBas.SqlGetFieldAsString(sql_busca_articulo, "NOMBRE_ARTICULO", nombre_ArticuLo);
+				//hasta aqui ya terminamos de llenar los articulos
+
+				//despues buscamos el precio de este articulo
+				ApiBas.SpName(sp_get_precio, "GET_PRECIO_ARTCLI");
+				ApiBas.SpSetParamAsInteger(sp_get_precio, "V_CLIENTE_ID", Convert.ToInt32(clave_cliente_id));
+				ApiBas.SpSetParamAsInteger(sp_get_precio, "V_ARTICULO_ID", Convert.ToInt32(articulo_id));
+				ApiBas.SpSetParamAsNull(sp_get_precio, "V_FECHA_VENTA");
+
+				ApiBas.SpExecProc(sp_get_precio);
+				ApiBas.SpGetParamAsDouble(sp_get_precio, "PRECIO_UNITARIO", ref precio_uni);
+				//aqui ya terminamos de buscar el precio del articulo dado.
+
+				//por ultimo buscamos su precio con impuesto incluido
+				ApiBas.SpName(sp_get_precio_impuesto, "PRECIO_CON_IMPTO");
+				ApiBas.SpSetParamAsInteger(sp_get_precio_impuesto, "V_ARTICULO_ID", Convert.ToInt32(articulo_id));
+				ApiBas.SpSetParamAsDouble(sp_get_precio_impuesto, "V_PRECIO", precio_uni);
+				ApiBas.SpSetParamAsString(sp_get_precio_impuesto, "V_CARGAR_SUN", "N");
+				ApiBas.SpSetParamAsString(sp_get_precio_impuesto, "V_OPERACION", "P");
+
+				ApiBas.SpExecProc(sp_get_precio_impuesto);
+				ApiBas.SpGetParamAsDouble(sp_get_precio_impuesto, "PRECIO", ref precio_imp);
+				//esto es lo que nos deberia salir...
+				//Debug.WriteLine($"salieron los valores sigueintes a: {articulo_id} c: {cl_articulo} n: {nombre_ArticuLo} p: {precio_uni} pi: {precio_imp}");
+			}
 		}
 	}
 }

@@ -24,7 +24,6 @@ namespace AppPrototipoPV
             textBox_hora.Text = DateTime.Now.ToString("HH:mm:ss");
             textBox_fecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
             capturar_fecha = $"{textBox_fecha.Text} {textBox_hora.Text}";
-            MessageBox.Show(capturar_fecha);
             lista_Cajas_cerradas = conexionDB.conexionDB.Instance.obtener_Cajas_por_abrir_cerrar(usuario_cajero.Idcajero, 'C');
         }
 
