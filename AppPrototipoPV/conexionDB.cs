@@ -204,10 +204,9 @@ namespace conexionDB
 			int sql = ApiBas.NewSql(transaccion); //dataset que hara el select
 			ApiBas.TrnStart(transaccion); //inicio de la transaccion
 
-			String cadenaConsulta = $@"SELECT c.caja_id, c.nombre, a.almacen_id, a.nombre
-										FROM CAJAS c
-									JOIN ALMACENES a ON c.almacen_id = a.almacen_id
-									WHERE c.caja_id = {caja_id}"; //consulta
+			String cadenaConsulta = $@"SELECT c.caja_id, c.nombre AS ""NOMBRE CAJA"", a.almacen_id,
+									a.nombre AS ""NOMBRE ALMACEN"" FROM CAJAS c JOIN ALMACENES a ON 
+									c.almacen_id = a.almacen_id WHERE c.caja_id = 750"; //consulta
 
 			ApiBas.SqlQry(sql, cadenaConsulta); //
 
@@ -218,9 +217,9 @@ namespace conexionDB
 				{
 
 					ApiBas.SqlGetFieldAsInteger(sql, "caja_id", ref id_caja);
-					ApiBas.SqlGetFieldAsString(sql, "nombre", nombre_caja);
+					ApiBas.SqlGetFieldAsString(sql, "NOMBRE CAJA", nombre_caja);
 					ApiBas.SqlGetFieldAsInteger(sql, "almacen_id", ref almacen_id);
-					ApiBas.SqlGetFieldAsString(sql, "nombre", nombre_almacen);
+					ApiBas.SqlGetFieldAsString(sql, "NOMBRE ALMACEN", nombre_almacen);
 
 					datos_cliente[0] = id_caja.ToString();
 					datos_cliente[1] = nombre_caja.ToString();
@@ -582,6 +581,10 @@ namespace conexionDB
 				return 1;
 			}
 			return 0;
+		}
+
+		public void Buscar_Articulo() {
+		
 		}
 	}
 }

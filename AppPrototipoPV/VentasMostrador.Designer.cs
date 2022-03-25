@@ -44,10 +44,8 @@ namespace AppPrototipoPV
             this.panel2 = new System.Windows.Forms.Panel();
             this.label_cajero = new System.Windows.Forms.Label();
             this.label_almacen = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox_clave_articulo = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -182,47 +180,30 @@ namespace AppPrototipoPV
             this.label_almacen.TabIndex = 0;
             this.label_almacen.Text = "Almacen Gneral";
             // 
-            // textBox2
+            // textBox_clave_articulo
             // 
-            this.textBox2.Location = new System.Drawing.Point(14, 168);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(194, 23);
-            this.textBox2.TabIndex = 6;
+            this.textBox_clave_articulo.Location = new System.Drawing.Point(12, 191);
+            this.textBox_clave_articulo.Name = "textBox_clave_articulo";
+            this.textBox_clave_articulo.Size = new System.Drawing.Size(194, 23);
+            this.textBox_clave_articulo.TabIndex = 6;
+            this.textBox_clave_articulo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_clave_articulo_KeyPress);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(14, 150);
+            this.label5.Location = new System.Drawing.Point(12, 173);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(155, 15);
             this.label5.TabIndex = 7;
             this.label5.Text = "Buscar por clave del articulo";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(257, 168);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(214, 23);
-            this.textBox3.TabIndex = 8;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(257, 150);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(170, 15);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "Buscar por nombre del articulo";
             // 
             // VentasMostrador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 450);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox_clave_articulo);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.textBox1);
@@ -259,9 +240,7 @@ namespace AppPrototipoPV
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label_cajero;
         private System.Windows.Forms.Label label_almacen;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox_clave_articulo;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label6;
     }
 }

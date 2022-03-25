@@ -18,12 +18,13 @@ namespace AppPrototipoPV
         string capturar_fecha;
         public cierreCaja(Cajero obj)
         {
+            
             InitializeComponent();
             this.usuario_cajero = obj;
-            capturar_fecha = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss");
-            MessageBox.Show(capturar_fecha);
             textBox_hora.Text = DateTime.Now.ToString("HH:mm:ss");
             textBox_fecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
+
+            
             lista_Cajas_cerradas = conexionDB.conexionDB.Instance.obtener_Cajas_por_abrir_cerrar(usuario_cajero.Idcajero, 'C');
         }
 
@@ -35,6 +36,8 @@ namespace AppPrototipoPV
                 comboBox_cajas.DataSource = lista_Cajas_cerradas;
                 comboBox_cajas.DisplayMember = "Item2";
                 comboBox_cajas.ValueMember = "Item1";
+                capturar_fecha = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss");
+                MessageBox.Show(capturar_fecha);
             }
         }
 

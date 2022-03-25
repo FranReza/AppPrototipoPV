@@ -33,5 +33,13 @@ namespace AppPrototipoPV
             label_almacen.Text = datos_caja_almacen.Nombre_almacen;
             label_cajero.Text = datos_cajero.Nombrecajero;
         }
+
+        private void textBox_clave_articulo_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((int)e.KeyChar == (int)Keys.Enter)
+            {
+                
+            }
+        }
     }
 }

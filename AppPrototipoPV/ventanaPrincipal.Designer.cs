@@ -40,7 +40,7 @@ namespace AppPrototipoPV
             // 
             // button_desconectarDB
             // 
-            this.button_desconectarDB.Location = new System.Drawing.Point(797, 477);
+            this.button_desconectarDB.Location = new System.Drawing.Point(797, 495);
             this.button_desconectarDB.Name = "button_desconectarDB";
             this.button_desconectarDB.Size = new System.Drawing.Size(148, 23);
             this.button_desconectarDB.TabIndex = 5;
@@ -50,7 +50,7 @@ namespace AppPrototipoPV
             // 
             // button_conectarDB
             // 
-            this.button_conectarDB.Location = new System.Drawing.Point(653, 477);
+            this.button_conectarDB.Location = new System.Drawing.Point(653, 495);
             this.button_conectarDB.Name = "button_conectarDB";
             this.button_conectarDB.Size = new System.Drawing.Size(138, 23);
             this.button_conectarDB.TabIndex = 4;
@@ -67,7 +67,7 @@ namespace AppPrototipoPV
             this.panel1.Controls.Add(this.button_apertura);
             this.panel1.Location = new System.Drawing.Point(1, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(179, 511);
+            this.panel1.Size = new System.Drawing.Size(179, 528);
             this.panel1.TabIndex = 6;
             // 
             // button_cierreC
@@ -108,7 +108,7 @@ namespace AppPrototipoPV
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::AppPrototipoPV.Properties.Resources.images;
-            this.ClientSize = new System.Drawing.Size(957, 510);
+            this.ClientSize = new System.Drawing.Size(957, 530);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.button_desconectarDB);
             this.Controls.Add(this.button_conectarDB);
