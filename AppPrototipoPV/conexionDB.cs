@@ -477,7 +477,7 @@ namespace conexionDB
 			int estado_trn = ApiBas.TrnStart(transaccion);
 
 			string convertir_fecha_formateada = DateTime.ParseExact(fecha, "dd/MM/yyyy", null).ToString("dd.MM.yyyy");
-			string convertir_fechahora_formateada = DateTime.ParseExact(fecha_capturada, "dd/MM/yyyy HH:MM:ss", null).ToString("dd.MM.yyyy HH:MM:ss");
+			string convertir_fechahora_formateada = DateTime.ParseExact(fecha_capturada, "dd/MM/yyyy HH:mm:ss", null).ToString("dd.MM.yyyy HH:mm:ss");
 
 			string query_insert_mvtos_cajas = $@"INSERT INTO MOVTOS_CAJAS (MOVTO_CAJA_ID, FECHA, HORA, TIPO_MOVTO, CAJA_ID," +
 			$@"CAJEROS_HABILITADOS, FORMA_EMITIDA, USUARIO_CREADOR, FECHA_HORA_CREACION," +
