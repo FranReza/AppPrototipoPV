@@ -4,6 +4,8 @@ using ApiBas = ApisMicrosip.ApiMspBasicaExt;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Collections.Generic;
+using AppPrototipoPV;
+using System.Linq;
 
 namespace conexionDB
 {
@@ -583,7 +585,7 @@ namespace conexionDB
 			return 0;
 		}
 
-		public void Buscar_Articulo_por_clave_con_precio_impuesto(string clave_articulo, string clave_cliente_id) {
+		public Articulo Buscar_Articulo_por_clave_con_precio_impuesto(string clave_articulo, string clave_cliente_id) {
 			//algunas variables
 			int articulo_id = 0;
 			StringBuilder cl_articulo = new StringBuilder();
@@ -633,8 +635,178 @@ namespace conexionDB
 				ApiBas.SpExecProc(sp_get_precio_impuesto);
 				ApiBas.SpGetParamAsDouble(sp_get_precio_impuesto, "PRECIO", ref precio_imp);
 				//esto es lo que nos deberia salir...
-				//Debug.WriteLine($"salieron los valores sigueintes a: {articulo_id} c: {cl_articulo} n: {nombre_ArticuLo} p: {precio_uni} pi: {precio_imp}");
+				Debug.WriteLine($"salieron los valores sigueintes a: {articulo_id} c: {cl_articulo} n: {nombre_ArticuLo} p: {precio_uni} pi: {precio_imp}");
+				Articulo art = new Articulo(articulo_id, cl_articulo.ToString(), nombre_ArticuLo.ToString(), precio_uni, precio_imp, 1);
+				return art;
 			}
+
+			return null;
+		}
+
+		public int Realizar_Venta_Mostrador(List<Articulo> list_art, Cliente cli, Caja caj, Cajero caje, double total_venta, double total_recibido, double total_unitario, double total_con_impuestos) {
+			//------------------------VARIABLES--------------------------------
+			string folio_generado = "W000"; //con esta variable creamos un folio desde un sp
+			int folio = 0; //folio obtenido desde un sp
+			int id_generado = 0; //aqui obtendremos el id para la tabla doctos_pv
+
+			//-------------------------TRANSACCIONES---------------------------------
+			int transaccion_docto_pv = ApiBas.NewTrn(db, 3);
+			int transaccion_sp1 = ApiBas.NewTrn(db, 3);
+			int transaccion_sp_gen_id = ApiBas.NewTrn(db, 3);
+			int transaccion_doctos_pv_detalles = ApiBas.NewTrn(db, 3);
+			int transaccion_doctos_pv_cobros = ApiBas.NewTrn(db, 3);
+			int transaccion_doctos_pv_cobros2 = ApiBas.NewTrn(db, 3);
+			int transaccion_aplica_doctos_pv_sp = ApiBas.NewTrn(db, 3);
+
+			//--------------------------OBJETOS SQL Y SP-----------------------------
+			int sql_docto_pv = ApiBas.NewSql(transaccion_docto_pv);
+			int sql_doctos_pv_detalles = ApiBas.NewSql(transaccion_doctos_pv_detalles);
+			int sql_doctos_pv_cobros = ApiBas.NewSql(transaccion_doctos_pv_cobros);
+			int sql_doctos_pv_cobros2 = ApiBas.NewSql(transaccion_doctos_pv_cobros);
+			int sp_1 = ApiBas.NewSp(transaccion_sp1);
+			int sp_2 = ApiBas.NewSp(transaccion_sp_gen_id);
+			int sp_3 = ApiBas.NewSp(transaccion_aplica_doctos_pv_sp);
+
+			//------------------------primero obtenemos algunos valores para insertar----------------------
+			//despues aqui obtenemos un id para la tabla doctos_pv confiando que no sera repetido.----
+			ApiBas.SpName(sp_2, "GEN_DOCTO_ID");
+			ApiBas.SpExecProc(sp_2);
+			ApiBas.SpGetParamAsInteger(sp_2, "DOCTO_ID", ref id_generado); //aqui ya obtuvimos el id
+
+			//primero aqui obtenemos el folio que necesitamos.
+			ApiBas.SpName(sp_1, "gen_folio_temp");
+			ApiBas.SpExecProc(sp_1);
+			ApiBas.SpGetParamAsInteger(sp_1, "PRECIO_UNITARIO", ref folio);
+			folio_generado += folio; //aqui concantenamos el folio.
+
+			//preparamos la consulta metiendo toda la informacion que necesitamos para insertar en doctos_pv
+			ApiBas.TrnStart(transaccion_docto_pv);
+			string query_docto_pv = $@"INSERT INTO DOCTOS_PV (DOCTO_PV_ID,CAJA_ID,TIPO_DOCTO,
+									SUCURSAL_ID,FOLIO,FECHA,HORA,CAJERO_ID,CLAVE_CLIENTE,CLIENTE_ID,
+									CLAVE_CLIENTE_FAC,CLIENTE_FAC_ID,DIR_CLI_ID,ALMACEN_ID,
+									LUGAR_EXPEDICION_ID,MONEDA_ID,IMPUESTO_INCLUIDO,TIPO_CAMBIO,
+									TIPO_DSCTO,DSCTO_PCTJE,DSCTO_IMPORTE,ESTATUS,APLICADO,IMPORTE_NETO,
+									TOTAL_IMPUESTOS,TOTAL_RETENCIONES,IMPORTE_DONATIVO,TOTAL_FPGC,
+									TICKET_EMITIDO,FORMA_EMITIDA,FORMA_GLOBAL_EMITIDA,CONTABILIZADO,
+									SISTEMA_ORIGEN,VENDEDOR_ID,CARGAR_SUN,PERSONA,TIPO_GEN_FAC,ES_FAC_GLOBAL,
+									FECHA_INI_FAC_GLOBAL,FECHA_FIN_FAC_GLOBAL,INCL_FACTURADOS_FAC_GLOBAL,
+									ALMACEN_ID_FAC_GLOBAL,REFER_RETING,UNID_COMPROM,DESCRIPCION,IMPUESTO_SUSTITUIDO_ID,
+									IMPUESTO_SUSTITUTO_ID,ES_CFD, MODALIDAD_FACTURACION,ENVIADO, EMAIL_ENVIO, 
+									USUARIO_CREADOR, CFDI_CERTIFICADO, USO_CFDI, METODO_PAGO_SAT, PARTIDA_AJUSTE_ID,
+									PRECIO_ORIG_PARTIDA_AJUSTE, FECHA_HORA_CREACION,USUARIO_ULT_MODIF, USUARIO_AUT_CREACION, 
+									FECHA_HORA_ULT_MODIF, USUARIO_CANCELACION, 
+									USUARIO_AUT_MODIF, FECHA_HORA_CANCELACION, 
+									FECHA_HORA_ENVIO, USUARIO_AUT_CANCELACION)
+									VALUES (
+									{id_generado}, {caj.Caja_id}, 'V', 11448, '{folio_generado}', 
+									'TODAY', 'NOW', {caje.Idcajero}, 
+									'{cli.Clave_cliente}', {cli.Cliente_id}, NULL, NULL, NULL, {caj.Almacen_id}, NULL,
+									1, 'S', 1, 'P', 0, 0, 'N', 'S', {total_unitario}, {total_con_impuestos},
+									0, 0, 0, 'N', 'N', 'N', 'N', 'PV', NULL, 'S', 
+									NULL, NULL, 'N', NULL, NULL, 'N', NULL, NULL, 
+									'N', NULL, NULL, NULL, 'N', NULL, 'N', NULL, '{caje.Usuariocajero}',
+									'N', NULL, NULL, NULL, 0, 'NOW', 
+									'{caje.Usuariocajero}', NULL, 'NOW', NULL,
+									NULL, NULL, 'NOW', NULL);";
+
+			//preparamos la consulta....
+			ApiBas.SqlQry(sql_docto_pv, query_docto_pv); //aqui preparamos la consulta
+			int q = ApiBas.SqlExecQuery(sql_docto_pv); //aqui ejecutamos y tenemos que capturar su valor para hacer commit
+
+			if (q == 0)
+			{ //significa que tuvo exito para insertar en la db
+				ApiBas.TrnCommit(transaccion_docto_pv); //guardamos los cambios con commit 
+			}
+			else {
+				ApiBas.TrnRollback(transaccion_docto_pv); //deshacemos los cambios y devolveremos un estado.
+				return q;
+			}
+			//aqui ya empezamos a insertar en doctos_pv_detalle
+			ApiBas.TrnStart(transaccion_doctos_pv_detalles);
+
+			var datosAgrupados = list_art.GroupBy(d => d.Articulo_id).Select(
+				g => new {
+						id = g.Key,
+						clave = g.First().Clave_articulo,
+						nombre = g.First().Nombre_articulo,
+						precio_u = g.First().Precio_unitario,
+						precio_i = g.First().Precio_impuesto,
+						cantidades = g.Sum(s => s.Cantidad)});
+
+			foreach (var dato in datosAgrupados) {
+				int i = 1;
+				string query_docto_pv_detalles = $@"INSERT INTO DOCTOS_PV_DET (DOCTO_PV_DET_ID,
+							DOCTO_PV_ID, CLAVE_ARTICULO, ARTICULO_ID, UNIDADES,
+							UNIDADES_DEV, TIPO_CONTAB_UNID, PRECIO_UNITARIO,
+							PRECIO_UNITARIO_IMPTO, IMPUESTO_POR_UNIDAD, PCTJE_DSCTO,
+							PRECIO_TOTAL_NETO, PRECIO_MODIFICADO, VENDEDOR_ID, 
+							PCTJE_COMIS, ROL, NOTAS, ES_TRAN_ELECT, ESTATUS_TRAN_ELECT,
+							POSICION, DSCTO_ART, DSCTO_EXTRA)
+							VALUES
+							(-1, {id_generado}, '{dato.clave}', {dato.id}, 
+							{dato.cantidades}, 0, '0', {dato.precio_u}, {dato.precio_i}, 0, 0, 
+							{dato.precio_u}, 'N', NULL, 0, 'N', NULL, 
+							'N', NULL, {i}, 0, 0);";
+				ApiBas.SqlQry(sql_doctos_pv_detalles, query_docto_pv_detalles); //aqui preparamos la consulta
+				int c = ApiBas.SqlExecQuery(sql_doctos_pv_detalles);
+				if (c == 0)
+				{
+					ApiBas.TrnCommit(transaccion_doctos_pv_detalles);
+				}
+				else {
+					int x = ApiBas.TrnRollback(transaccion_doctos_pv_detalles);
+					return x;//nos retorna lo que salio en caso de que no funcione este metodo.
+				}
+			}
+
+			//ahora guardamos en doctos_pv_cobros
+			ApiBas.TrnStart(transaccion_doctos_pv_cobros);
+
+			string query_DOCTOS_PV_COBROS1 = $@"INSERT INTO DOCTOS_PV_COBROS (DOCTO_PV_COBRO_ID, DOCTO_PV_ID, TIPO, 
+							FORMA_COBRO_ID, IMPORTE,TIPO_CAMBIO, IMPORTE_MON_DOC)
+							VALUES (-1, {id_generado}, 'C', 564, {total_recibido}, 1, {total_recibido})";
+
+			string query_DOCTOS_PV_COBROS2 = $@"INSERT INTO DOCTOS_PV_COBROS (DOCTO_PV_COBRO_ID, DOCTO_PV_ID, TIPO, 
+							FORMA_COBRO_ID, IMPORTE,TIPO_CAMBIO, IMPORTE_MON_DOC)
+							VALUES (-1, {id_generado}, 'A', 564, {total_venta - total_recibido}, 1, {total_venta - total_recibido})";
+
+			ApiBas.SqlQry(sql_doctos_pv_cobros, query_DOCTOS_PV_COBROS1);
+			int v = ApiBas.SqlExecQuery(sql_doctos_pv_cobros);
+
+			if (v == 0)
+			{
+				ApiBas.TrnCommit(transaccion_doctos_pv_cobros);
+			}
+			else {
+				int y = ApiBas.TrnRollback(transaccion_doctos_pv_cobros);
+				return y;
+			}
+
+			ApiBas.TrnStart(transaccion_doctos_pv_cobros2);
+
+			ApiBas.SqlQry(sql_doctos_pv_cobros2, query_DOCTOS_PV_COBROS2);
+			int l = ApiBas.SqlExecQuery(sql_doctos_pv_cobros2);
+
+			if (l == 0)
+			{
+				ApiBas.TrnCommit(transaccion_doctos_pv_cobros2);
+			}
+			else
+			{
+				int y = ApiBas.TrnRollback(transaccion_doctos_pv_cobros2);
+				return y;
+			}
+
+			ApiBas.SpName(sp_3, "APLICA_DOCTO_PV");
+			ApiBas.SpSetParamAsInteger(sp_3, "V_DOCTO_PV_ID", id_generado);
+			int u = ApiBas.SpExecProc(sp_3);
+
+			if (u == 0) {
+				ApiBas.TrnCommit(transaccion_aplica_doctos_pv_sp);
+			} else {
+				return ApiBas.TrnRollback(transaccion_aplica_doctos_pv_sp);
+			}
+			return 0; //si llega hasta aqui el codigo quiere decir que todo se guardo con exito.
 		}
 	}
 }

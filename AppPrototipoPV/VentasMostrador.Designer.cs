@@ -37,7 +37,7 @@ namespace AppPrototipoPV
             this.Descuento = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label_total = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_Efectivo = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label_nombre_cliente = new System.Windows.Forms.Label();
             this.label_clave_cliente = new System.Windows.Forms.Label();
@@ -46,6 +46,9 @@ namespace AppPrototipoPV
             this.label_almacen = new System.Windows.Forms.Label();
             this.textBox_clave_articulo = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.button_eliminarFila = new System.Windows.Forms.Button();
+            this.button_Venta = new System.Windows.Forms.Button();
+            this.label_total_venta = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -99,9 +102,8 @@ namespace AppPrototipoPV
             this.label_total.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label_total.Location = new System.Drawing.Point(277, 373);
             this.label_total.Name = "label_total";
-            this.label_total.Size = new System.Drawing.Size(184, 45);
+            this.label_total.Size = new System.Drawing.Size(0, 45);
             this.label_total.TabIndex = 1;
-            this.label_total.Text = "Total $0.00";
             // 
             // label1
             // 
@@ -113,12 +115,12 @@ namespace AppPrototipoPV
             this.label1.TabIndex = 2;
             this.label1.Text = "Efectivo";
             // 
-            // textBox1
+            // textBox_Efectivo
             // 
-            this.textBox1.Location = new System.Drawing.Point(92, 390);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(149, 23);
-            this.textBox1.TabIndex = 3;
+            this.textBox_Efectivo.Location = new System.Drawing.Point(92, 390);
+            this.textBox_Efectivo.Name = "textBox_Efectivo";
+            this.textBox_Efectivo.Size = new System.Drawing.Size(149, 23);
+            this.textBox_Efectivo.TabIndex = 3;
             // 
             // panel1
             // 
@@ -197,16 +199,49 @@ namespace AppPrototipoPV
             this.label5.TabIndex = 7;
             this.label5.Text = "Buscar por clave del articulo";
             // 
+            // button_eliminarFila
+            // 
+            this.button_eliminarFila.Location = new System.Drawing.Point(233, 190);
+            this.button_eliminarFila.Name = "button_eliminarFila";
+            this.button_eliminarFila.Size = new System.Drawing.Size(135, 23);
+            this.button_eliminarFila.TabIndex = 8;
+            this.button_eliminarFila.Text = "Eliminar Fila";
+            this.button_eliminarFila.UseVisualStyleBackColor = true;
+            this.button_eliminarFila.Click += new System.EventHandler(this.button_eliminarFila_Click);
+            // 
+            // button_Venta
+            // 
+            this.button_Venta.Location = new System.Drawing.Point(259, 389);
+            this.button_Venta.Name = "button_Venta";
+            this.button_Venta.Size = new System.Drawing.Size(149, 23);
+            this.button_Venta.TabIndex = 9;
+            this.button_Venta.Text = "Realizar Venta";
+            this.button_Venta.UseVisualStyleBackColor = true;
+            this.button_Venta.Click += new System.EventHandler(this.button_Venta_Click);
+            // 
+            // label_total_venta
+            // 
+            this.label_total_venta.AutoSize = true;
+            this.label_total_venta.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label_total_venta.Location = new System.Drawing.Point(452, 379);
+            this.label_total_venta.Name = "label_total_venta";
+            this.label_total_venta.Size = new System.Drawing.Size(131, 32);
+            this.label_total_venta.TabIndex = 10;
+            this.label_total_venta.Text = "Total $0.00";
+            // 
             // VentasMostrador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 450);
+            this.Controls.Add(this.label_total_venta);
+            this.Controls.Add(this.button_Venta);
+            this.Controls.Add(this.button_eliminarFila);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.textBox_clave_articulo);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox_Efectivo);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_total);
             this.Controls.Add(this.dataGridView1);
@@ -233,7 +268,7 @@ namespace AppPrototipoPV
         private System.Windows.Forms.DataGridViewTextBoxColumn Descuento;
         private System.Windows.Forms.Label label_total;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_Efectivo;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label_nombre_cliente;
         private System.Windows.Forms.Label label_clave_cliente;
@@ -242,5 +277,8 @@ namespace AppPrototipoPV
         private System.Windows.Forms.Label label_almacen;
         private System.Windows.Forms.TextBox textBox_clave_articulo;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button_eliminarFila;
+        private System.Windows.Forms.Button button_Venta;
+        private System.Windows.Forms.Label label_total_venta;
     }
 }
