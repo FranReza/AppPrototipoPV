@@ -34,6 +34,8 @@ namespace AppPrototipoPV
             label_nombre_cliente.Text = datos_cliente.Nombre_cliente;
             label_almacen.Text = datos_caja_almacen.Nombre_almacen;
             label_cajero.Text = datos_cajero.Nombrecajero;
+            conexionDB.conexionDB.Instance.exis_lista_discretos();
+            Debug.WriteLine($"{datos_caja_almacen.Almacen_id}, {datos_caja_almacen.Caja_id} , {datos_caja_almacen.Nombre_almacen} {datos_caja_almacen.Nombre_caja}");
         }
 
         public double calcular_total_venta(List<Articulo> art) {
@@ -89,13 +91,48 @@ namespace AppPrototipoPV
 
                     dataGridView1.Rows.Add(row);
                     lista_articulos.Add(art);
+
+                    double total = 0;
+                    total = lista_articulos.Sum(item => item.Precio_impuesto);
+
+                    if (art.Series_lotes is null)
+                    {
+                        MessageBox.Show("no es un articulo con series/lotes.");
+                    }
+                    else {
+                        MessageBox.Show("es un articulo con series/lotes.");
+                        for (int i = 0; i < art.Series_lotes.Count; i++) {
+                            Debug.WriteLine($"CONTENIDO : {art.Series_lotes[i].Item1} : {art.Series_lotes[i].Item2}");
+                        }
+                    }
+
+                    label_total_venta.Text = $"Total: ${total}";
                 }
             }
         }
 
         private void button_eliminarFila_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Remove(dataGridView1.CurrentRow);
+            
+            if (dataGridView1.SelectedRows.Count > 0)
+                {
+                   int filaseleccionada = dataGridView1.CurrentRow.Index;
+                   dataGridView1.Rows.RemoveAt(filaseleccionada);
+                   lista_articulos.RemoveAt(filaseleccionada);
+
+                double total = 0;
+                total = lista_articulos.Sum(item => item.Precio_impuesto);
+
+                label_total_venta.Text = $"Total: ${total}";
+
+                //verificando la lista.
+                for (int i = 0; i < lista_articulos.Count; i++) {
+                    Debug.WriteLine($"DATO: {lista_articulos[i].Articulo_id} {lista_articulos[i].Nombre_articulo}");
+                }
+                    
+            } else {
+                    MessageBox.Show("Selecciona una fila");
+            }
         }
 
         private void button_Venta_Click(object sender, EventArgs e)
@@ -104,6 +141,9 @@ namespace AppPrototipoPV
             double total_impuestos = calcular_impuestos_totales(lista_articulos);
             double total_venta_neta = calcular_importe_neto_total(lista_articulos);
             double recibido = Convert.ToDouble(textBox_Efectivo.Text);
+
+            label_total_venta.Text = $"Total: ${total_venta}";
+            label_cambio.Text = $"Total: ${recibido - total_venta}";
 
             int res = conexionDB.conexionDB.Instance.Realizar_Venta_Mostrador(
                     lista_articulos,
@@ -124,5 +164,8 @@ namespace AppPrototipoPV
                 MessageBox.Show("ya la cagaste mi rey");
             }
         }
+
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e){ }
+        private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e){}
     }
 }

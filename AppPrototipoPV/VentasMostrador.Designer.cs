@@ -49,6 +49,7 @@ namespace AppPrototipoPV
             this.button_eliminarFila = new System.Windows.Forms.Button();
             this.button_Venta = new System.Windows.Forms.Button();
             this.label_total_venta = new System.Windows.Forms.Label();
+            this.label_cambio = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -70,6 +71,8 @@ namespace AppPrototipoPV
             this.dataGridView1.RowTemplate.Height = 25;
             this.dataGridView1.Size = new System.Drawing.Size(689, 136);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
+            this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsRemoved);
             // 
             // Articulo
             // 
@@ -223,17 +226,27 @@ namespace AppPrototipoPV
             // 
             this.label_total_venta.AutoSize = true;
             this.label_total_venta.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label_total_venta.Location = new System.Drawing.Point(452, 379);
+            this.label_total_venta.Location = new System.Drawing.Point(426, 381);
             this.label_total_venta.Name = "label_total_venta";
             this.label_total_venta.Size = new System.Drawing.Size(131, 32);
             this.label_total_venta.TabIndex = 10;
             this.label_total_venta.Text = "Total $0.00";
+            // 
+            // label_cambio
+            // 
+            this.label_cambio.AutoSize = true;
+            this.label_cambio.Location = new System.Drawing.Point(563, 403);
+            this.label_cambio.Name = "label_cambio";
+            this.label_cambio.Size = new System.Drawing.Size(82, 15);
+            this.label_cambio.TabIndex = 11;
+            this.label_cambio.Text = "Cambio :$0.00";
             // 
             // VentasMostrador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 450);
+            this.Controls.Add(this.label_cambio);
             this.Controls.Add(this.label_total_venta);
             this.Controls.Add(this.button_Venta);
             this.Controls.Add(this.button_eliminarFila);
@@ -280,5 +293,6 @@ namespace AppPrototipoPV
         private System.Windows.Forms.Button button_eliminarFila;
         private System.Windows.Forms.Button button_Venta;
         private System.Windows.Forms.Label label_total_venta;
+        private System.Windows.Forms.Label label_cambio;
     }
 }

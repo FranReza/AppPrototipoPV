@@ -54,6 +54,7 @@ namespace AppPrototipoPV
                 this.obj_cliente = new Cliente(clienteinfo[2], Convert.ToInt32(clienteinfo[0]), clienteinfo[1]);
                 this.obj_caja_almacen = new Caja(Convert.ToInt32(cajainfo[0]), cajainfo[1], Convert.ToInt32(cajainfo[2]), cajainfo[3]);
                 
+             
                 VentasMostrador form = new VentasMostrador(this.obj_cliente, this.obj_caja_almacen, this.usuario_cajero);
                 form.MdiParent = this.MdiParent;
                 form.Show();
