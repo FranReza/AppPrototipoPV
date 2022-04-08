@@ -655,19 +655,15 @@ namespace conexionDB
             double precio_uni = 0;
             double precio_imp = 0;
 
-
             //primero las transacciones.
             int transaccion_busca_articulo = ApiBas.NewTrn(db, 3);
             int transaccion_get_precio = ApiBas.NewTrn(db, 3);
             int transaccion_get_precio_impuesto = ApiBas.NewTrn(db, 3);
 
-
-
             //segundo las variables de sql y store procedure
             int sql_busca_articulo = ApiBas.NewSql(transaccion_busca_articulo);
             int sp_get_precio = ApiBas.NewSp(transaccion_get_precio);
             int sp_get_precio_impuesto = ApiBas.NewSp(transaccion_get_precio_impuesto);
-
 
             //PRIMERO BUSCAMOS EL ARTICULO
             string query_busca_articulo = $@"SELECT ARTICULO_ID, CLAVE_ARTICULO, NOMBRE_ARTICULO FROM BUSCA_ARTICULOS('CLAVE', 'N', 'S', '{clave_articulo}', NULL) ROWS 1 TO 1;";
@@ -880,7 +876,6 @@ namespace conexionDB
                     return l;
                 }
             }
-
             ApiBas.SpName(sp_3, "APLICA_DOCTO_PV");
             Debug.WriteLine("S:" + id_generado);
             ApiBas.SpSetParamAsInteger(sp_3, "V_DOCTO_PV_ID", id_generado);
