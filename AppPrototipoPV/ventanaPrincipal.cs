@@ -18,29 +18,13 @@ namespace AppPrototipoPV
         public ventanaPrincipal()
         {
             InitializeComponent();
-        }
-
-        private void button_conectarDB_Click(object sender, EventArgs e)
-        {
-            int resultado = conexionDB.conexionDB.Instance.enlazar_conexion();
-            if (resultado == 0)
-            {
-
-                MessageBox.Show("Conexion Enlazada");
-                button_conectarDB.Enabled = false;
-                button_desconectarDB.Enabled = true;
-                button_ventaM.Enabled = true;
-                button_apertura.Enabled = true;
-                button_cierreC.Enabled = true;
-
-                objetoCajero();
-                conexionDB.conexionDB.Instance.CrearUsuarioCajero();
-
-            }
-            else
-            {
-                MessageBox.Show("Falla en la conexion: " + resultado);
-            }
+            this.CenterToScreen();
+            button_desconectarDB.Enabled = true;
+            button_ventaM.Enabled = true;
+            button_apertura.Enabled = true;
+            button_cierreC.Enabled = true;
+            objetoCajero();
+            conexionDB.conexionDB.Instance.CrearUsuarioCajero();
         }
 
         private void button_desconectarDB_Click(object sender, EventArgs e)
@@ -48,16 +32,7 @@ namespace AppPrototipoPV
             int res = conexionDB.conexionDB.Instance.desconectarDB();
             if (res == 0)
             {
-                MessageBox.Show("Finalizo correctamente la conexion a la base de datos.");
-                button_desconectarDB.Enabled = false;
-                button_conectarDB.Enabled = true;
-                button_ventaM.Enabled = false;
-                button_apertura.Enabled = false;
-                button_cierreC.Enabled = false;
-            }
-            else
-            {
-                MessageBox.Show("Ocurrio un error inesperado.");
+                Application.Exit();
             }
         }
 

@@ -12,7 +12,7 @@ namespace conexionDB
     public class conexionDB
     {
         private static conexionDB conexion = null;
-        private string nombreusuarioconectado = "SABINE";
+        private string nombreusuarioconectado;
         private int db = ApiBas.NewDB();
         public string[] usuarioinfo = new string[5];
 
@@ -29,22 +29,18 @@ namespace conexionDB
             }
         }
 
-        public int enlazar_conexion()
+        public int enlazar_conexion(string user, string pass, string conexion)
         {
             ApiBas.SetErrorHandling(0, 0);
             int transaccion = ApiBas.NewTrn(db, 3);
-            int conecta = ApiBas.DBConnect(db, "C:/Microsip datos/PRUEBA.fdb", "SABINE", "12345");
+            int conecta = ApiBas.DBConnect(db, conexion, user, pass);
 
-            StringBuilder obtieneError = new StringBuilder(1000);
-            int codigoError = ApiBas.GetLastErrorMessage(obtieneError);
-            String mensajeError = codigoError.ToString();
-
-            if (codigoError > 0)
+            if (conecta == 0)
             {
+                nombreusuarioconectado = user;
                 return conecta;
             }
-            else
-            {
+            else {
                 return conecta;
             }
 
@@ -823,7 +819,7 @@ namespace conexionDB
 							VALUES
 							(-1, {id_generado}, '{dato.clave}', {dato.id}, 
 							{dato.cantidades}, 0, '0', {dato.precio_u}, {dato.precio_i}, 0, 0, 
-							{dato.precio_u}, 'N', NULL, 0, 'N', NULL, 
+							{dato.precio_u * dato.cantidades}, 'N', NULL, 0, 'N', NULL, 
 							'N', NULL, {i}, 0, 0);";
                 ApiBas.SqlQry(sql_doctos_pv_detalles, query_docto_pv_detalles); //aqui preparamos la consulta
                 int c = ApiBas.SqlExecQuery(sql_doctos_pv_detalles);

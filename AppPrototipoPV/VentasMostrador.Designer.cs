@@ -237,7 +237,7 @@ namespace AppPrototipoPV
             // label_cambio
             // 
             this.label_cambio.AutoSize = true;
-            this.label_cambio.Location = new System.Drawing.Point(563, 403);
+            this.label_cambio.Location = new System.Drawing.Point(436, 426);
             this.label_cambio.Name = "label_cambio";
             this.label_cambio.Size = new System.Drawing.Size(82, 15);
             this.label_cambio.TabIndex = 11;

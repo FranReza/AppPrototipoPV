@@ -66,7 +66,7 @@ namespace AppPrototipoPV
             // 
             // button_guardar
             // 
-            this.button_guardar.Location = new System.Drawing.Point(21, 211);
+            this.button_guardar.Location = new System.Drawing.Point(21, 193);
             this.button_guardar.Name = "button_guardar";
             this.button_guardar.Size = new System.Drawing.Size(75, 23);
             this.button_guardar.TabIndex = 3;
@@ -90,13 +90,13 @@ namespace AppPrototipoPV
             this.label_unidades.Name = "label_unidades";
             this.label_unidades.Size = new System.Drawing.Size(68, 15);
             this.label_unidades.TabIndex = 6;
-            this.label_unidades.Text = "Unidades: 1";
+            this.label_unidades.Text = "Unidades: 0";
             // 
             // Capturar_series_lotes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(300, 246);
+            this.ClientSize = new System.Drawing.Size(300, 223);
             this.Controls.Add(this.label_unidades);
             this.Controls.Add(this.button_add);
             this.Controls.Add(this.button_guardar);

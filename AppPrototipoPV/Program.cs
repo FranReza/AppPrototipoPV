@@ -17,7 +17,10 @@ namespace AppPrototipoPV
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ventanaPrincipal());
+
+            sesion main = new sesion();
+            main.Show();
+            Application.Run();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace AppPrototipoPV
     {
         private List<Tuple<Int32, String>> datos_series_lotes;
         public List<Tuple<Int32, String>> enviar_series_lotes = new List<Tuple<int, string>>();
+        public int cantidad;
         private int indice_obtenido;
         public Capturar_series_lotes(List<Tuple<Int32, String>> obj, int indice)
         {
@@ -44,6 +45,9 @@ namespace AppPrototipoPV
             string clave = comboBox_series_lotes.SelectedItem.ToString();
             int valor = Convert.ToInt32(comboBox_series_lotes.SelectedValue);
             enviar_series_lotes.Add(Tuple.Create(valor, clave));
+
+            Debug.WriteLine(enviar_series_lotes.Count+"x");
+            cantidad++;
             listBox_info.Items.Add(clave);
             
             comboBox_series_lotes.DataSource = null;
@@ -52,6 +56,7 @@ namespace AppPrototipoPV
             comboBox_series_lotes.DisplayMember = "Item2";
             comboBox_series_lotes.ValueMember = "Item1";
             label_unidades.Text = $"Unidades: {enviar_series_lotes.Count}";
+            
         }
 
     }
