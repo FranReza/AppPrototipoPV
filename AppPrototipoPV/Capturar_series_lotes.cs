@@ -21,6 +21,7 @@ namespace AppPrototipoPV
         {
             datos_series_lotes = obj; //añadirmos esto
             indice_obtenido = indice;
+            this.CenterToScreen();
             InitializeComponent();
             this.button_guardar.DialogResult = DialogResult.OK;
         }

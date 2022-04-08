@@ -70,7 +70,6 @@ namespace AppPrototipoPV
             this.Controls.Add(this.button_aceptar_caja);
             this.Controls.Add(this.comboBox_cajas);
             this.Controls.Add(this.label1);
-            this.Location = new System.Drawing.Point(1000, 100);
             this.Name = "EscogerCaja";
             this.Text = "EscogerCaja";
             this.Load += new System.EventHandler(this.EscogerCaja_Load);

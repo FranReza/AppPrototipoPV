@@ -26,6 +26,7 @@ namespace AppPrototipoPV
             this.datos_caja_almacen = obj2;
             this.datos_cajero = obj3;
             InitializeComponent();
+            this.CenterToScreen();
         }
 
         private void VentasMostrador_Load(object sender, EventArgs e)

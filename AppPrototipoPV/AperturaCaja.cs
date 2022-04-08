@@ -22,6 +22,7 @@ namespace AppPrototipoPV
         {
             object[] fondo_inicial = {"Efectivo", "Pesos", 0.00};
             this.usuario_cajero = obj;
+            this.CenterToScreen();
             InitializeComponent();
             textBox_hora.Text = DateTime.Now.ToString("HH:mm:ss");
             textBox_fecha.Text = DateTime.Now.ToString("dd/MM/yyyy");

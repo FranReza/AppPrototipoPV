@@ -96,5 +96,10 @@ namespace AppPrototipoPV
                 MessageBox.Show("Solo pueden operar cajas los cajeros autorizados", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

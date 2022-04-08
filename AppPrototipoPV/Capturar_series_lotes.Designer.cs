@@ -104,7 +104,7 @@ namespace AppPrototipoPV
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox_series_lotes);
             this.Name = "Capturar_series_lotes";
-            this.Text = "Capturar_series_lotes";
+            this.Text = "Capturar series/lotes";
             this.Load += new System.EventHandler(this.Capturar_series_lotes_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

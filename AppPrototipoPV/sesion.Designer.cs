@@ -126,7 +126,7 @@ namespace AppPrototipoPV
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Name = "sesion";
-            this.Text = "sesion";
+            this.Text = "Iniciar Sesion";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

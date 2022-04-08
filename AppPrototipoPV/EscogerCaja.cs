@@ -23,7 +23,8 @@ namespace AppPrototipoPV
             this.usuario_cajero = obj;
             lista_Cajas_operar = conexionDB.conexionDB.Instance.obtener_cajas_por_operar(usuario_cajero.Idcajero, 'O');
             InitializeComponent();
-            
+            this.CenterToScreen();
+
         }
 
         private void EscogerCaja_Load(object sender, EventArgs e)
