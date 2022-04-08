@@ -600,42 +600,57 @@ namespace conexionDB
             return 0;
         }
 
-        public void exis_lista_discretos() {
-            int transaccion_lista_discretos = ApiBas.NewTrn(db, 3);
-            int sql_lista_discretos = ApiBas.NewSql(transaccion_lista_discretos);
 
-            string query_articulo_discreto = $@"SELECT * FROM LISTA_DISCRETOS(18491, 19, NULL)";
+        public List<Tuple<Int32, String>> exis_lista_discretos(Articulo art) {
+            //este metodo nos ayudara a saber si un articulo consultado dentro de la base de datos es un 
+            //articulo discreto, es decir que tiene series o lotes
+            //algunas variables
+            List<Tuple<Int32, String>> tupla_series_lotes = new List<Tuple<int, string>>();
+            int art_discreto_id = 0;
+            StringBuilder claves_discretos = new StringBuilder();
+            
+            //transacciones
+            int transaccion_lista_discretos = ApiBas.NewTrn(db, 3); //transaccion
+            int transaccion_claves_discretos = ApiBas.NewTrn(db, 3);
+            
+            //objetos de sql
+            int sql_lista_discretos = ApiBas.NewSql(transaccion_lista_discretos); //objeto sql
+            int sql_claves_discretos = ApiBas.NewSql(transaccion_claves_discretos);
+            
+            //consultas 
+            string query_articulo_discreto = $@"SELECT ART_DISCRETO_ID FROM LISTA_DISCRETOS({art.Articulo_id}, 19, NULL)
+                                                    WHERE EXISTENCIA > 0;";
+
             ApiBas.SqlQry(sql_lista_discretos, query_articulo_discreto);
             ApiBas.SqlExecQuery(sql_lista_discretos);
 
-            if (ApiBas.SqlRecordCount(sql_lista_discretos) != 0)
-            {//si existe este articulo en la tabla de articulos discretos
-             //nos traemos su existencias y sus series
-                int id = 0;
-                int art_discreto_id = 0;
-                double existencia = 0;
+            if (ApiBas.SqlRecordCount(sql_lista_discretos) != 0) {
+                //si existe este articulo en la tabla de articulos discretos
+                //nos traemos su existencias y sus series
 
-                for (int i = 0; i < ApiBas.SqlRecordCount(sql_lista_discretos); i++)
+                int vueltas = ApiBas.SqlRecordCount(sql_lista_discretos);
+                for (int i = 0; i < vueltas; i++)
                 {
-                    ApiBas.SqlGetFieldAsInteger(sql_lista_discretos, "ARTICULO_ID", ref id);
                     ApiBas.SqlGetFieldAsInteger(sql_lista_discretos, "ART_DISCRETO_ID", ref art_discreto_id);
-                    ApiBas.SqlGetFieldAsDouble(sql_lista_discretos, "EXISTENCIA", ref existencia);
-                    int c = ApiBas.SqlNext(sql_lista_discretos);
-                    //aqui llenamos la tupla si tenemos articulos que pertenecen a discretos.
-                    Debug.WriteLine($"SALIDA DE DATOS: {id} {art_discreto_id} : {existencia}");
-                    //Tuple.Create<Int32, String>(arreglo_caja_id[i], nombre_caja.ToString())
-                    //tupla_series_lotes.Add(Tuple.Create<String, String>(art_discreto_id.ToString(), existencia.ToString()));
-                    //tupla_series_lotes.ins
-                   
-                    Debug.WriteLine("D:_" + c);
-                    id = 0;
-                    art_discreto_id = 0;
-                    existencia = 0;
-                }
+                    
 
+                    string query_claves_discretos = $@"SELECT CLAVE FROM ARTICULOS_DISCRETOS WHERE ART_DISCRETO_ID = {art_discreto_id}";
+                    ApiBas.SqlQry(sql_claves_discretos, query_claves_discretos);
+                    ApiBas.SqlExecQuery(sql_claves_discretos);
+
+                    ApiBas.SqlGetFieldAsString(sql_claves_discretos, "CLAVE", claves_discretos);
+                    //aqui llenamos la tupla si tenemos articulos que pertenecen a discretos.
+                    //Tuple.Create<Int32, String>(arreglo_caja_id[i], nombre_caja.ToString())
+                    tupla_series_lotes.Add(Tuple.Create<Int32, String>(art_discreto_id, claves_discretos.ToString()));
+                    //tupla_series_lotes.ins
+                    ApiBas.SqlNext(sql_lista_discretos);
+                }
+                return tupla_series_lotes;
             }
+            return null;
         }
-            public Articulo Buscar_Articulo_por_clave_con_precio_impuesto(string clave_articulo, string clave_cliente_id)
+
+        public Articulo Buscar_Articulo_por_clave_con_precio_impuesto(string clave_articulo, string clave_cliente_id)
         {
             //algunas variables
             int articulo_id = 0;
@@ -643,12 +658,13 @@ namespace conexionDB
             StringBuilder nombre_ArticuLo = new StringBuilder();
             double precio_uni = 0;
             double precio_imp = 0;
-            List<Tuple<String, String>> tupla_series_lotes = new List<Tuple<string, string>>();
+
 
             //primero las transacciones.
             int transaccion_busca_articulo = ApiBas.NewTrn(db, 3);
             int transaccion_get_precio = ApiBas.NewTrn(db, 3);
             int transaccion_get_precio_impuesto = ApiBas.NewTrn(db, 3);
+
 
 
             //segundo las variables de sql y store procedure
@@ -669,7 +685,7 @@ namespace conexionDB
                 ApiBas.SqlGetFieldAsString(sql_busca_articulo, "CLAVE_ARTICULO", cl_articulo);
                 ApiBas.SqlGetFieldAsString(sql_busca_articulo, "NOMBRE_ARTICULO", nombre_ArticuLo);
                 //hasta aqui ya terminamos de llenar los articulos
-
+                
                 //despues buscamos el precio de este articulo
                 ApiBas.SpName(sp_get_precio, "GET_PRECIO_ARTCLI");
                 ApiBas.SpSetParamAsInteger(sp_get_precio, "V_CLIENTE_ID", Convert.ToInt32(clave_cliente_id));
@@ -689,22 +705,13 @@ namespace conexionDB
 
                 ApiBas.SpExecProc(sp_get_precio_impuesto);
                 ApiBas.SpGetParamAsDouble(sp_get_precio_impuesto, "PRECIO", ref precio_imp);
-
-
-                //despues verificamos si es un articulo discreto que tiene serie o lote 
-                
-                    //aqui enviamos el objeto con la lista de tuplas llena.
-                    Articulo art_tuple = new Articulo(articulo_id, cl_articulo.ToString(), nombre_ArticuLo.ToString(), precio_uni, precio_imp, 1, tupla_series_lotes);
-                    return art_tuple;
-                
-
+            
                 //esto es lo que nos deberia salir...
-                Debug.WriteLine($"salieron los valores sigueintes a: {articulo_id} c: {cl_articulo} n: {nombre_ArticuLo} p: {precio_uni} pi: {precio_imp}");
+                //Debug.WriteLine($"salieron los valores sigueintes a: {articulo_id} c: {cl_articulo} n: {nombre_ArticuLo} p: {precio_uni} pi: {precio_imp}");
                 //aqui en caso de que sea un producto que no es de serie o lote lo enviamos vacio
                 Articulo art = new Articulo(articulo_id, cl_articulo.ToString(), nombre_ArticuLo.ToString(), precio_uni, precio_imp, 1, null);
                 return art;
             }
-
             return null;
         }
 

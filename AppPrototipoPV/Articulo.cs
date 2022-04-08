@@ -14,10 +14,9 @@ namespace AppPrototipoPV
         private double precio_unitario;
         private double precio_impuesto;
         private int cantidad;
-        private List <Tuple<String, string>> series_lotes;
+        private List <Tuple<Int32, String>> series_lotes;
 
-        public Articulo(int articulo_id, string clave_articulo, string nombre_articulo, double precio_unitario,
-            double precio_impuesto, int cantidad, List<Tuple<string, string>> series_lotes)
+        public Articulo(int articulo_id, string clave_articulo, string nombre_articulo, double precio_unitario, double precio_impuesto, int cantidad, List<Tuple<int, string>> series_lotes)
         {
             this.articulo_id = articulo_id;
             this.clave_articulo = clave_articulo;
@@ -34,6 +33,6 @@ namespace AppPrototipoPV
         public double Precio_unitario { get => precio_unitario; set => precio_unitario = value; }
         public double Precio_impuesto { get => precio_impuesto; set => precio_impuesto = value; }
         public int Cantidad { get => cantidad; set => cantidad = value; }
-        public List<Tuple<string, string>> Series_lotes { get => series_lotes; set => series_lotes = value; }
+        public List<Tuple<int, string>> Series_lotes { get => series_lotes; set => series_lotes = value; }
     }
 }

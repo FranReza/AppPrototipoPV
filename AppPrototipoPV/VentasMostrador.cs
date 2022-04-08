@@ -34,7 +34,6 @@ namespace AppPrototipoPV
             label_nombre_cliente.Text = datos_cliente.Nombre_cliente;
             label_almacen.Text = datos_caja_almacen.Nombre_almacen;
             label_cajero.Text = datos_cajero.Nombrecajero;
-            conexionDB.conexionDB.Instance.exis_lista_discretos();
             Debug.WriteLine($"{datos_caja_almacen.Almacen_id}, {datos_caja_almacen.Caja_id} , {datos_caja_almacen.Nombre_almacen} {datos_caja_almacen.Nombre_caja}");
         }
 
@@ -81,7 +80,7 @@ namespace AppPrototipoPV
 
                 }
                 else {
-                    DataGridViewRow row = new DataGridViewRow();
+                    DataGridViewRow row = new DataGridViewRow(); //en esta parte es cuando guardamos el articulo en la tabla 
                     row.CreateCells(dataGridView1);
                     row.Cells[0].Value = art.Clave_articulo;
                     row.Cells[1].Value = art.Nombre_articulo;
@@ -91,21 +90,29 @@ namespace AppPrototipoPV
 
                     dataGridView1.Rows.Add(row);
                     lista_articulos.Add(art);
-
-                    double total = 0;
-                    total = lista_articulos.Sum(item => item.Precio_impuesto);
-
-                    if (art.Series_lotes is null)
+                    List<Tuple<Int32, String>> l = conexionDB.conexionDB.Instance.exis_lista_discretos(art);
+                    if (l != null)
                     {
-                        MessageBox.Show("no es un articulo con series/lotes.");
-                    }
-                    else {
-                        MessageBox.Show("es un articulo con series/lotes.");
-                        for (int i = 0; i < art.Series_lotes.Count; i++) {
-                            Debug.WriteLine($"CONTENIDO : {art.Series_lotes[i].Item1} : {art.Series_lotes[i].Item2}");
+                        Debug.WriteLine($@"se cargo una lista de series/lotes
+                                           de este producto. ultimo elemento insert es: 
+                                            {lista_articulos.Count - 1}");
+                        int indiceProducto = lista_articulos.Count - 1;
+                        Capturar_series_lotes hijo = new Capturar_series_lotes(l, indiceProducto);
+                        DialogResult res = hijo.ShowDialog();
+                        if (res == DialogResult.OK) {
+                            List<Tuple<Int32, String>> datos_obtenidos = hijo.enviar_series_lotes;
+                            lista_articulos[indiceProducto].Series_lotes = datos_obtenidos;
+                            int c = lista_articulos[indiceProducto].Series_lotes.Count;
+
+                            for (int i = 0; i < c; i++) {
+                                Debug.WriteLine($"{lista_articulos[indiceProducto].Series_lotes[i].Item1} - {lista_articulos[indiceProducto].Series_lotes[i].Item2}");
+                            }
+                            
                         }
                     }
-
+                    
+                    double total = 0;//en esta parte hacemos el calculo en pantalla cuando guardamos un objeto.
+                    total = lista_articulos.Sum(item => item.Precio_impuesto);
                     label_total_venta.Text = $"Total: ${total}";
                 }
             }
@@ -165,7 +172,32 @@ namespace AppPrototipoPV
             }
         }
 
-        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e){ }
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e){}
         private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e){}
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e){}
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            int unidades = 0;
+            double precio_venta = 0;
+            double total = 0;
+            int fila = e.RowIndex;
+            int columna = e.ColumnIndex;
+
+            Debug.WriteLine($"celda seleccionada es: {fila} {columna}");
+            
+            unidades = Convert.ToInt32(dataGridView1.Rows[fila].Cells[columna].Value);
+            precio_venta = Convert.ToDouble(dataGridView1.Rows[fila].Cells[3].Value);
+
+            total = Convert.ToDouble((precio_venta*unidades));
+            //DataGrid1.Rows[Linea].Cells[Celda].Value =Valor;
+            dataGridView1.Rows[fila].Cells[3].Value = total; //añadimos este valor
+            lista_articulos[fila].Cantidad = unidades;
+            lista_articulos[fila].Precio_impuesto = total;
+
+            double total_pantalla = 0;//en esta parte hacemos el calculo en pantalla cuando guardamos un objeto.
+            total_pantalla = lista_articulos.Sum(item => item.Precio_impuesto);
+            label_total_venta.Text = $"Total: ${total_pantalla}";
+        }
     }
 }
